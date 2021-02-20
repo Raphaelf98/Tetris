@@ -56,7 +56,18 @@ SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
     //std::cout<< "point.x: " << point.x << "point.y: "<< point.y << std::endl;
     SDL_RenderFillRect(sdl_renderer, &block);
   }
+  SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
   
+  for ( Tetracube  *tetracube : tetris.getTHeap()) 
+  {
+    for (SDL_Point const &point : tetracube->getTetracubeMatrix()) {
+    block.x = point.x * block.w;
+    block.y = point.y * block.h;
+    //std::cout<< "point.x: " << point.x << "point.y: "<< point.y << std::endl;
+    SDL_RenderFillRect(sdl_renderer, &block);
+  }
+    
+  }
    
    SDL_RenderPresent(sdl_renderer);
    std::cout << "rendering"<< std::endl;

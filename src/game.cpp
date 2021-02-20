@@ -26,9 +26,9 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 
     // Input, Update, Render - the main game loop.
     
-    controller.HandleInput(running);
+    controller.HandleInput(running, _tetris);
     renderer.Render(_tetris);
-    _tetris.UpdateTetracube();
+   _tetris.UpdateTetracube();
     frame_end = SDL_GetTicks();
 
     // Keep track of how long each loop through the input/update/render cycle

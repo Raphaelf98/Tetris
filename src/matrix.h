@@ -18,7 +18,7 @@ Matrix(std::initializer_list< std::initializer_list< T>> matrixList);
 T  operator ()(size_t row, size_t column);
 void  operator()(size_t row, size_t col, T value);
 void operator()(std::initializer_list< std::initializer_list< T>> matrixList);
-Matrix<T> operator * ( Matrix rHsMatrix);
+Matrix<T> operator * ( const Matrix &rHsMatrix);
 Matrix<T> operator + ( Matrix rHsMatrix);
 Matrix<T> operator - ( Matrix rHsMatrix);
 
@@ -207,7 +207,7 @@ for (int i= 0; i<_cols; i++)
 }
 std::cout<< std::endl;
 }
-template <typename T> Matrix<T> Matrix<T>::operator * ( Matrix	rHsMatrix)
+/*template <typename T> Matrix<T> Matrix<T>::operator * ( Matrix &rHsMatrix)
 {
 try
 {
@@ -275,6 +275,44 @@ catch(const std::exception& e)
        return *this;
  }
 }
+*/
+
+template <typename T> Matrix<T> Matrix<T>::operator * (const Matrix &rHsMatrix)
+{
+try
+{
+std::cout<<"Multiplying "<< this->_cols << " X " << this->_rows << " with " << rHsMatrix._cols << " X " << rHsMatrix._rows<< std::endl;
+if (this->_rows != rHsMatrix._cols)
+      	throw std::out_of_range("Matrix product invalid");
+
+Matrix <T> tmp (rHsMatrix._rows, this->_cols);
+
+for (int i= 0; i<rHsMatrix._rows; i++)
+{	
+	for (int k = 0; k < this->_cols ; k++)
+	{
+	T temp = 0;
+        for (int j=0; j<this->_rows; j++)
+        {     
+              std::cout << "accessing: " << "outer row: " << i << "  col: " << k<< "inner row "<< j << std::endl;
+	      
+              temp += this->_matrix[j][k] *  rHsMatrix._matrix[i][j];
+        }
+	std::cout << "accessing: " << "row: " << i << "  col: " << k << std::endl;
+	tmp._matrix[i][k] = temp;
+        }
+}
+
+return tmp;
+
+}
+catch(const std::exception& e)
+ {
+       std::cout  << e.what();
+       return *this;
+ }
+}
+
 
 template <typename T> void Matrix<T>::operator()(std::initializer_list< std::initializer_list< T>> matrixList)
 {
