@@ -6,12 +6,12 @@
 
 int main()
 {
-    constexpr std::size_t kFramesPerSecond{5};
+    constexpr std::size_t kFramesPerSecond{3};
   constexpr std::size_t kMsPerFrame{1000 / kFramesPerSecond};
   constexpr std::size_t kScreenWidth{648};
-  constexpr std::size_t kScreenHeight{1080};
-  constexpr std::size_t kGridWidth{24};
-  constexpr std::size_t kGridHeight{40};
+  constexpr std::size_t kScreenHeight{864};
+  constexpr std::size_t kGridWidth{18};
+  constexpr std::size_t kGridHeight{24};
  /*Matrix <int> _rightRotation = Matrix({{0,-1,0},
                                 {1,0,0},
                                 {0,0,1}});

@@ -140,6 +140,44 @@ std::vector<Tetracube*> Tetris::getTHeap()
 {
         return _THeap;
 }
+ int Tetris::getYHeapCoordinates(int x)
+ {      std::vector <int> yCandidates;
+       for (Tetracube *tetra: _THeap)
+       {
+               for (SDL_Point &point : tetra->getTetracubeMatrix())
+               {
+                       if(point.x == x)
+                       { 
+                               yCandidates.push_back(point.y);
+                       }
+               }
+       }
+       if(!yCandidates.empty())
+       {
+               return *min_element(yCandidates.begin(), yCandidates.end());
+       }
+       else return grid_height-1;
+
+ }
+ int Tetris::getXHeapCoordinates(int x,int y)
+ {      std::vector <int> xCandidates;
+       for (Tetracube *tetra: _THeap)
+       {
+               for (SDL_Point &point : tetra->getTetracubeMatrix())
+               {
+                       if(point.y == y)
+                       { 
+                               xCandidates.push_back(point.x);
+                       }
+               }
+       }
+       if(!xCandidates.empty())
+       {
+               return *min_element(xCandidates.begin(), xCandidates.end());
+       }
+       else return grid_height-1;
+
+ }
 
 
 
@@ -147,10 +185,16 @@ bool Tetris::positionCheck()
 {
 
 std::vector<int> yCor = _TFalling->YShapeCoordinates();
+std::vector<int> xCor = _TFalling->XShapeCoordinates();
+int yDistance;
+for (int i = 0; i< xCor.size(); i++)
+{   
+        yDistance = getYHeapCoordinates(xCor[i])-yCor[i];
+        if (yDistance == 1) break;
+} 
+//int maxYCor = *max_element(yCor.begin(), yCor.end());
 
-int maxYCor = *max_element(yCor.begin(), yCor.end());
-
-if (maxYCor == 30) return false;
+if (yDistance == 1 ) return false;
 
 else return true;
 }

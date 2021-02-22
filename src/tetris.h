@@ -21,6 +21,7 @@ class Tetracube
     void updatePOSE();
     std::vector<int> YShapeCoordinates();
     std::vector<int> XShapeCoordinates();
+    
     Matrix<int> getPosition();
     std::vector<SDL_Point> getTetracubeMatrix();
     void convertToSDL_PointMatrix(Matrix <int> &source);
@@ -68,6 +69,8 @@ class Tetris
     Tetris(int grid_width, int grid_height);
     std::vector<SDL_Point> getFallingShape();
     std::vector<Tetracube*> getTHeap();
+    int getYHeapCoordinates(int x);
+    int getXHeapCoordinates(int x, int y);
     void UpdateTetracube();
     void UpdateTetracubeHeap();
     bool positionCheck();
