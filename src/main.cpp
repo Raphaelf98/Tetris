@@ -6,20 +6,20 @@
 
 int main()
 {
-    constexpr std::size_t kFramesPerSecond{3};
+    constexpr std::size_t kFramesPerSecond{6};
   constexpr std::size_t kMsPerFrame{1000 / kFramesPerSecond};
   constexpr std::size_t kScreenWidth{648};
   constexpr std::size_t kScreenHeight{864};
   constexpr std::size_t kGridWidth{18};
   constexpr std::size_t kGridHeight{24};
- /*Matrix <int> _rightRotation = Matrix({{0,-1,0},
-                                {1,0,0},
-                                {0,0,1}});
-  Matrix <int> _initialTransformation = Matrix({{1,0,5},{0,1,5},{0,0,1}});
-  Matrix <int> _shape =Matrix({ {0,0,0,0},
-                {-1,0,1,2},
-                {1,1,1,1} });
-  Matrix <int> _curr = Matrix<int> (4,3);
+ /*Matrix <double> _rightRotation = Matrix({{0.1,-1.1,0.1},
+                                {1.0,0.0,0.0},
+                                {0.0,0.0,1.0}});
+  Matrix <double> _initialTransformation = Matrix({{1.0,0.0,5.0},{0.0,1.0,5.0},{0.0,0.0,1.0}});
+  Matrix <double> _shape =Matrix({ {0.0,0.0,0.0,0.0},
+                {-1.0,0.0,1.0,2.0},
+                {1.0,1.0,1.0,1.0} });
+  Matrix <double> _curr = Matrix<double> (4,3);
   _rightRotation.printMatrix();
 _initialTransformation.printMatrix();
 _shape.printMatrix();
@@ -35,6 +35,5 @@ game.Run(controller, renderer, kMsPerFrame);
   
   
   return 0;
-
 
 };

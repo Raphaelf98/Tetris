@@ -3,7 +3,7 @@
 
 #include "SDL.h"
 #include "matrix.h"
-
+#include <random>
 #define STRAIGHT 1
 #define L 2
 #define SKEW 3
@@ -18,7 +18,7 @@ class Tetracube
     //Tetracube  ();
     Tetracube();
     void updateFalling();
-    void updatePOSE();
+    void updatePOSE(const std::vector<bool> &LRCollision,int gridWidth, int gridHeigth);
     std::vector<int> YShapeCoordinates();
     std::vector<int> XShapeCoordinates();
     
@@ -28,8 +28,12 @@ class Tetracube
     int identifier;
     std::vector<SDL_Point> SDLMatrix;
     Matrix <int> computeMapping(Matrix <int> shape);
-    Direction direction;
+    Direction direction = Direction::kNon;
+
     private:
+    std::random_device dev;
+    std::mt19937 engine;
+    std::uniform_int_distribution<int> randomTetracube;
     //initial transformation with (5,1) offset
     Matrix <int> _initialTransformation = Matrix({{1,0,5},{0,1,1},{0,0,1}});
     Matrix<int> _currentTransformation = Matrix({{1,0,0,},
@@ -70,10 +74,11 @@ class Tetris
     std::vector<SDL_Point> getFallingShape();
     std::vector<Tetracube*> getTHeap();
     int getYHeapCoordinates(int x);
-    int getXHeapCoordinates(int x, int y);
+    std::vector<bool>  collisionCheck();
     void UpdateTetracube();
-    void UpdateTetracubeHeap();
+    void checkHeap();
     bool positionCheck();
+    
     Tetracube* _TFalling;
     bool landed = false;
 
