@@ -242,5 +242,20 @@ else {
 void Tetris::checkHeap()
 {
         
+        for (Tetracube *tetra: _THeap)
+        {       
+                
+                for (int i = 0; i <tetra->getTetracubeMatrix().size(); i++ )
+                {
+                     if ( tetra->getTetracubeMatrix().at(i).x == grid_height -1) 
+                     {
+                         tetra->getTetracubeMatrix().erase(tetra->SDLMatrix.begin() +i);
+                     }
+
+                }
+        }
+        
+       
+        
 
 }

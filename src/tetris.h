@@ -21,6 +21,7 @@ class Tetracube
     void updatePOSE(const std::vector<bool> &LRCollision,int gridWidth, int gridHeigth);
     std::vector<int> YShapeCoordinates();
     std::vector<int> XShapeCoordinates();
+    void erasePoint();
     
     Matrix<int> getPosition();
     std::vector<SDL_Point> getTetracubeMatrix();

@@ -40,38 +40,59 @@ Renderer::~Renderer() {
 
 void Renderer::Render(Tetris &tetris) {
    SDL_Rect block;
- 
+  SDL_Rect block1;
   // Clear screen
   SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF);
   SDL_RenderClear(sdl_renderer);
   block.w = screen_width / grid_width;
   block.h = screen_height / grid_height;
+block1.w = screen_width / grid_width;
+  block1.h = screen_height / grid_height;
+if (tetris.getTHeap().size() != _heapSize)
+{
+_r += 50;
+_g += 20;
+_b += 10;
+if(_r == 250 ) _r = 0;
+    if(_g == 200 ) _g = 0;
+    if(_b == 250 ) _b = 0;
+std::vector<int> rgb{_r,_g,_b};
+  _rgbVec.push_back(rgb);
+}
 
 
-
-SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+SDL_SetRenderDrawColor(sdl_renderer, _r, _g, _b, 255);
   for (SDL_Point const &point : tetris.getFallingShape()) {
+    
     block.x = point.x * block.w;
     block.y = point.y * block.h;
     //std::cout<< "point.x: " << point.x << "point.y: "<< point.y << std::endl;
     SDL_RenderFillRect(sdl_renderer, &block);
+    
   }
-  SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+
   
+   
+   
+  int i =0;
   for ( Tetracube  *tetracube : tetris.getTHeap()) 
   {
-    for (SDL_Point const &point : tetracube->getTetracubeMatrix()) {
-    block.x = point.x * block.w;
-    block.y = point.y * block.h;
-    //std::cout<< "point.x: " << point.x << "point.y: "<< point.y << std::endl;
-    SDL_RenderFillRect(sdl_renderer, &block);
-  }
+    SDL_SetRenderDrawColor(sdl_renderer, _rgbVec[i][0], _rgbVec[i][1], _rgbVec[i][2], 255);
+    for (SDL_Point const &point : tetracube->getTetracubeMatrix()) 
+    {
+    block1.x = point.x * block1.w;
+    block1.y = point.y * block1.h;
     
+    //std::cout<< "point.x: " << point.x << "point.y: "<< point.y << std::endl;
+    SDL_RenderFillRect(sdl_renderer, &block1);
+
+   }
+    ++i;
   }
    
    SDL_RenderPresent(sdl_renderer);
    std::cout << "rendering"<< std::endl;
-               
+   _heapSize = tetris.getTHeap().size();
 }
 
 void Renderer::UpdateWindowTitle(int score, int fps) {
