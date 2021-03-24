@@ -26,6 +26,7 @@ Matrix<T> operator * (T x);
 
 int getRowSize();
 int getColumnSize();
+void eraseColumn(int col);
 void printMatrix();
 private:
 
@@ -42,13 +43,14 @@ template<typename T> Matrix<T>::Matrix()
 // constructor with rows and colums
 template<typename T> Matrix<T>::Matrix(const size_t rows,const size_t cols)
 {
+	//std::cout.setstate(std::ios_base::failbit);
 _rows= rows;
 _cols = cols;
 _matrix = new T*[_rows];
-std::cout << "Creating " << _cols << " X " << _rows<<" Matrix"<<  std::endl;
+//std::cout << "Creating " << _cols << " X " << _rows<<" Matrix"<<  std::endl;
 for (size_t t= 0; t <_rows; t++)
 {
-	std::cout<<"Heap memory allocated for row number:"<<t << " at memory address: " << &_matrix[t]<<std::endl;
+	//std::cout<<"Heap memory allocated for row number:"<<t << " at memory address: " << &_matrix[t]<<std::endl;
          
 }   
 for (size_t t= 0; t <_rows; t++)
@@ -59,14 +61,15 @@ for (size_t t= 0; t <_rows; t++)
 }
 template<typename T> Matrix<T>::Matrix(std::initializer_list< std::initializer_list< T>> matrixList )
 {
+
 try{
 _rows= matrixList.begin()->size();
 _cols	= matrixList.size();
 _matrix = new T*[_rows];
-std::cout << "Creating " << _cols << " X " << _rows <<" Matrix"<<  std::endl;
+//std::cout << "Creating " << _cols << " X " << _rows <<" Matrix"<<  std::endl;
 for (size_t t= 0; t <_rows; t++)
 {
-       std::cout<<"Heap memory allocated for row number:"<<t << " at memory address: " << &_matrix[t]<<std::endl;
+       //std::cout<<"Heap memory allocated for row number:"<<t << " at memory address: " << &_matrix[t]<<std::endl;
 
 }
 for (size_t t= 0; t <_rows; t++)
@@ -81,9 +84,9 @@ int rIt = 0;
 if( row.size()!= _rows) throw std::invalid_argument( "matrix not correctly populated \n" );
 for (T col: row)
 {
-std::cout<< "rIt: " << rIt<< " cIt " << cIt << std::endl;
+//std::cout<< "rIt: " << rIt<< " cIt " << cIt << std::endl;
 _matrix[rIt][cIt]= col;
-std::cout<<"__"<< std::endl;
+//std::cout<<"__"<< std::endl;
 rIt= rIt +1 ;
 }
 cIt = cIt +1;
@@ -96,7 +99,9 @@ catch(const std::exception& e) {
 }
 // destructor
 template<typename T> Matrix<T>::~Matrix()
-{	if (memoryAllocated){
+{	
+	
+	if (memoryAllocated){
 	if(_rows > 0)
 	{
 	for (size_t t; t < _rows; t++)
@@ -108,13 +113,14 @@ template<typename T> Matrix<T>::~Matrix()
 	{
 	delete [] _matrix;
 	}
-	std::cout<<"Heap memory deallocated"<<std::endl;
+	//std::cout<<"Heap memory deallocated"<<std::endl;
 }
 
 }
 //copy constructor
 template <typename T>  Matrix<T>::Matrix(const Matrix &source)
 {
+	
 	_cols = source._cols;
 	_rows = source._rows;
 	_matrix = new T*[_rows];
@@ -134,6 +140,7 @@ template <typename T>  Matrix<T>::Matrix(const Matrix &source)
 //copy assignment operator
 template<typename T> Matrix<T> Matrix<T>::operator = (const Matrix &source)
 {
+	
 std::cout << "copy assingment operator invoked" << std::endl;
 //free memory from previously allocated obejct his
 if(memoryAllocated){
@@ -153,7 +160,7 @@ _matrix[t] = new T[_cols];
 }
 for (size_t t= 0; t <_rows; t++)
 {
-        std::cout<<"Heap memory allocated for row number:"<<t << " at memory address: " << &_matrix[t]<<std::endl;
+        //std::cout<<"Heap memory allocated for row number:"<<t << " at memory address: " << &_matrix[t]<<std::endl;
 }
 
 for (int i = 0; i< _rows; i++)
@@ -161,7 +168,7 @@ for (int i = 0; i< _rows; i++)
 	for (int j = 0; j < _cols; j++)
 	{
 	_matrix[i][j] = source._matrix[i][j];
-	std::cout<< "copy elements in copy assingment operator" << std::endl;
+	//std::cout<< "copy elements in copy assingment operator" << std::endl;
 	}
 }
 return *this;
@@ -181,6 +188,7 @@ catch(const std::exception& e)
 }
 return _matrix[row][col];
 }
+
 template <typename T> void  Matrix<T>::operator()( size_t row,size_t  col, T value)
 {
 try{	
@@ -436,5 +444,75 @@ for (int i = 0; i< this->_rows; i++)
 	return tmp;
 
 }
-
+template <typename T > void Matrix<T>::eraseColumn(int col)
+{
+	if (_rows -1 == 0 )
+	{	
+		std::cout<< "   this->_rows-1 == 0   " << std::endl;
+		for(int i = 0; i< _rows; i++)
+		{
+			delete [] this->_matrix[i];
+		}
+		delete[] this->_matrix;
+		this->_rows = 0;
+		this->_cols= 0;
+	}
+	else
+	{
+		
+		if(col < _rows && col >= 0)
+		{ 	
+			Matrix<T> tmp(this->_rows-1, this->_cols);
+			int t =0;
+			for (int i = 0; i< this->_rows; i++)
+			{	
+				if (i != col)
+				{	
+					std::cout<< "t  " << t<< std::endl;
+        			for (int j = 0; j < this->_cols; j++)
+        			{
+						std::cout<< " blablablabalabn  " << std::endl;
+        				tmp._matrix[t][j] = this->_matrix[i][j];
+        			
+        			}
+					
+					t++;
+				}
+				else
+				{
+					std::cout<< "ignored  " << t<< std::endl;
+				}
+			}
+			std::cout<< "delete old matrix  " << std::endl;
+			for(int i = 0; i< _rows; i++)
+			{
+				delete [] _matrix[i];
+			}
+			delete[] _matrix;
+			std::cout<< "create new " << std::endl;
+			_rows=tmp._rows;
+			_cols=tmp._cols;
+			_matrix = new T*[tmp._rows];
+			for (size_t t = 0; t < tmp._rows; t++)
+			{
+				_matrix[t] = new T[tmp._cols];
+			}	
+			std::cout<< "fill new matrix with temp data " << std::endl;
+			for (int i = 0; i< tmp._rows; i++)
+				{	
+				
+        			for (int j = 0; j < tmp._cols; j++)
+        			{
+        				_matrix[i][j] = tmp._matrix[i][j];
+        			
+        			}
+					
+				
+				}
+			std::cout<< "Column "<< col << " erased" << std::endl;
+		}
+	
+		else {std::cout<< "Bad Matrix Access"<< std::endl;}
+	}
+}
 #endif

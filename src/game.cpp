@@ -29,7 +29,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     controller.HandleInput(running, _tetris);
     renderer.Render(_tetris);
    _tetris.UpdateTetracube();
-   //_tetris.checkHeap();
+   _tetris.checkHeap();
     frame_end = SDL_GetTicks();
 
     // Keep track of how long each loop through the input/update/render cycle
