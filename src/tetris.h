@@ -22,11 +22,12 @@ class Tetracube
     std::vector<int> YShapeCoordinates();
     std::vector<int> XShapeCoordinates();
     void eraseRow(int y);
-           std::vector<SDL_Point> SDLMatrix;  
+    void updateTetracube(int deletedRow);
+    std::vector<SDL_Point> SDLMatrix;  
 
     Matrix<int> getPosition();
     std::vector<SDL_Point> getTetracubeMatrix();
-    void convertToSDL_PointMatrix(Matrix <int> &source);
+    int getTetracubeSize();
     int identifier;
     Matrix <int> computeMapping(Matrix <int> shape);
     Direction direction = Direction::kNon;
@@ -89,6 +90,7 @@ class Tetris
     
 
     void UpdateTetracube();
+    void updateHeap();
     void checkHeap();
     bool positionCheck();
     
@@ -96,6 +98,7 @@ class Tetris
     bool landed = false;
 
     private:
+    std::vector<int> deletedRowsIndex;
     std::vector<int> rowSize;
     int grid_width;
     int grid_height;

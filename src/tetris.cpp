@@ -6,7 +6,7 @@ Tetracube::Tetracube(): engine(dev()),
       
 {   
     identifier = randomTetracube(engine);
-    switch(L)
+    switch(identifier)
     {
         case STRAIGHT: //Straight shape
         _shape({ {0,0,0,0},
@@ -124,19 +124,11 @@ std::vector<int> Tetracube::XShapeCoordinates()
         }
     return xCor;
 }
-/*void Tetracube::convertToSDL_PointMatrix(Matrix <int> &source)
+int Tetracube::getTetracubeSize()
 {
-    for (int i = 0; i < source.getRowSize(); i++)
-    {   //convert homogeneous 3x4 matrix to 2x4 vector of points
-       
-        SDL_Point point;
-            
-        point.x = source(i,0);
-        point.y = source(i,1);
-        SDLMatrix.push_back(point);
-    }
+        return _currentShape.getRowSize();
+}
 
-}*/
 std::vector<SDL_Point> Tetracube::getTetracubeMatrix()
 {       
         SDLMatrix = std::vector<SDL_Point>(_currentShape.getRowSize());
@@ -196,22 +188,7 @@ std::vector<SDL_Point> Tetracube::getRightRotated()
         {      
               
                 std::cout<< "currentshap row size " << _currentShape.getRowSize()<<std::endl;
-                /*if (_currentShape(i,1) == y) 
-                {       
-                        std::cout<< "deleting element from row:  "<<i <<std::endl;
-                         _currentShape.eraseColumn(i);
-                         i=0;
-                }
-                else
-                {
-                        i++;
-                }
-                if (i==3) 
-                {
-                        std::cout<< "terminated shape does not contain element with row index " <<std::endl;
-                        break;
-                        
-                }*/
+          
                 for (int i = 0; i < _currentShape.getRowSize(); i++)
                 {
                         if (_currentShape(i,1) == y) 
@@ -224,6 +201,17 @@ std::vector<SDL_Point> Tetracube::getRightRotated()
                 if (j==5) break;
         }
          std::cout<< "deletion comlpeted " <<std::endl;
+ }
+
+ void Tetracube::updateTetracube(int deletedRow)
+ {
+        for (int i = 0; i < _currentShape.getRowSize(); i++)
+        {
+                if (_currentShape(i,1) < deletedRow) 
+                {       
+                         _currentShape(i , 1, _currentShape(i,1) + 1);
+                }
+        }
  }
 //-------------------------------------------------------------
 
@@ -456,11 +444,37 @@ void Tetris::checkHeap()
                         {       
                                 _THeap[j]->_currentShape.printMatrix();
                                 _THeap[j]->eraseRow(i);
+                                deletedRowsIndex.push_back(i);
                                 _THeap[j]->_currentShape.printMatrix();
-
+                                //ensure that empty Tetracubes do not remain in Heap
+                                if(false)//(_THeap[j]->getTetracubeSize() == 0)
+                                {
+                                        _THeap.erase(_THeap.begin() + j);
+                                }
                         }
                         rowSize[i] = 0;
                 }
         }
+        
+}
+void Tetris::updateHeap()
+{
+        for (int i = 0; i < deletedRowsIndex.size(); i++)
+        {
+                 for (Tetracube *tetra : _THeap)
+                {       //first element true if left side col -- second elem true if right side col
+                       
+                        tetra->updateTetracube(deletedRowsIndex[i]);
+
+                }
+                for(int j =0; j<rowSize.size(); j++ )
+                {
+                        if(rowSize[j] == deletedRowsIndex[i])
+                        {      
+                                rowSize.erase(rowSize.begin() + deletedRowsIndex[i] );
+                        }
+                }
+        }
+        deletedRowsIndex.clear();
         
 }
