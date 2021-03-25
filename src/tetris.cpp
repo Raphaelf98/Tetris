@@ -57,12 +57,6 @@ Tetracube::Tetracube(): engine(dev()),
 }
 
 
-void Tetracube::updateFalling()
-{   
-      
-
-        
-}
 
  void Tetracube::updatePOSE(const std::vector<bool> &LRCollision,int gridWidth, int gridHeigth)
  {
@@ -72,8 +66,7 @@ void Tetracube::updateFalling()
 
         switch (direction) 
         {
-        // TODO: conduct check by testing for collision for given rotation case 
-        // apply rotation, init transformation and test with field boundaries and Heap coordinates if collision condition is violated rotattion need to be blocked
+       
 
         case Direction::kUp:
         if(!LRCollision[3])

@@ -19,7 +19,6 @@ class Tetracube
     enum class Direction { kUp, kDown, kLeft, kRight, kNon };
     //Tetracube  ();
     Tetracube();
-    void updateFalling();
     void updatePOSE(const std::vector<bool> &LRCollision,int gridWidth, int gridHeigth);
     std::vector<int> YShapeCoordinates();
     std::vector<int> XShapeCoordinates();
