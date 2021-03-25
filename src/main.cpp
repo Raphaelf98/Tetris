@@ -6,7 +6,7 @@
 
 int main()
 {
-    constexpr std::size_t kFramesPerSecond{4};
+    constexpr std::size_t kFramesPerSecond{8};
   constexpr std::size_t kMsPerFrame{1000 / kFramesPerSecond};
   constexpr std::size_t kScreenWidth{468};
   constexpr std::size_t kScreenHeight{864};

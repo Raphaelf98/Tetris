@@ -16,6 +16,8 @@
 class Tetracube
 {
     public:
+    int count = 2;
+
     enum class Direction { kUp, kDown, kLeft, kRight, kNon };
     //Tetracube  ();
     Tetracube();
@@ -97,7 +99,6 @@ class Tetris
     void checkHeap();
     bool positionCheck();
     int score = 0;
-
     Tetracube* _TFalling;
     bool landed = false;
 

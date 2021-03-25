@@ -101,9 +101,12 @@ Tetracube::Tetracube(): engine(dev()),
         direction = Direction::kNon;
 
         _currentShape = _currentTransformation * _rotatedShape;
-
-        _initialTransformation = _initialTransformation + _fallMapping;
-        
+        if (count % 2 == 0 )
+        {
+                      _initialTransformation = _initialTransformation + _fallMapping;
+                     
+        }
+        count++;
         _currentShape = _initialTransformation * _currentShape;
        
         
