@@ -133,7 +133,7 @@ template <typename T>  Matrix<T>::Matrix(const Matrix &source)
 	for (size_t j = 0; j < _cols; j++)
 		{
 			_matrix[i][j] = source._matrix[i][j];
-			std::cout<< "copying elements ...." << std::endl;
+			//std::cout<< "copying elements ...." << std::endl;
 		}
 	}
 }
@@ -141,7 +141,7 @@ template <typename T>  Matrix<T>::Matrix(const Matrix &source)
 template<typename T> Matrix<T> Matrix<T>::operator = (const Matrix &source)
 {
 	
-std::cout << "copy assingment operator invoked" << std::endl;
+//std::cout << "copy assingment operator invoked" << std::endl;
 //free memory from previously allocated obejct his
 if(memoryAllocated){
 for(int i = 0; i< _rows; i++)
@@ -178,7 +178,10 @@ template <typename T> T  Matrix<T>::operator()(size_t row, size_t col)
 {
 try
 {	
-if (row > _rows && col > _cols){
+if (row > _rows && col > _cols ){
+	throw std::out_of_range("Bad Matrix Access");
+}
+if (_rows ==0 ||_cols==0){
 	throw std::out_of_range("Bad Matrix Access");
 }
 }
@@ -289,7 +292,7 @@ template <typename T> Matrix<T> Matrix<T>::operator * (const Matrix &rHsMatrix)
 {
 try
 {
-std::cout<<"Multiplying "<< this->_cols << " X " << this->_rows << " with " << rHsMatrix._cols << " X " << rHsMatrix._rows<< std::endl;
+//std::cout<<"Multiplying "<< this->_cols << " X " << this->_rows << " with " << rHsMatrix._cols << " X " << rHsMatrix._rows<< std::endl;
 if (this->_rows != rHsMatrix._cols)
       	throw std::out_of_range("Matrix product invalid");
 
@@ -302,11 +305,11 @@ for (int i= 0; i<rHsMatrix._rows; i++)
 	T temp = 0;
         for (int j=0; j<this->_rows; j++)
         {     
-              std::cout << "accessing: " << "outer row: " << i << "  col: " << k<< "inner row "<< j << std::endl;
+              //std::cout << "accessing: " << "outer row: " << i << "  col: " << k<< "inner row "<< j << std::endl;
 	      
               temp += this->_matrix[j][k] *  rHsMatrix._matrix[i][j];
         }
-	std::cout << "accessing: " << "row: " << i << "  col: " << k << std::endl;
+	//std::cout << "accessing: " << "row: " << i << "  col: " << k << std::endl;
 	tmp._matrix[i][k] = temp;
         }
 }
@@ -336,10 +339,10 @@ delete[] _matrix;
 _rows= matrixList.begin()->size();
 _cols	= matrixList.size();
 _matrix = new T*[_rows];
-std::cout << "Creating " << _cols << " X " << _rows <<" Matrix"<<  std::endl;
+//std::cout << "Creating " << _cols << " X " << _rows <<" Matrix"<<  std::endl;
 for (size_t t= 0; t <_rows; t++)
 {
-       std::cout<<"Heap memory allocated for row number:"<<t << " at memory address: " << &_matrix[t]<<std::endl;
+       //std::cout<<"Heap memory allocated for row number:"<<t << " at memory address: " << &_matrix[t]<<std::endl;
 
 }
 for (size_t t= 0; t <_rows; t++)
@@ -354,9 +357,9 @@ int rIt = 0;
 if( row.size()!= _rows) throw std::invalid_argument( "matrix not correctly populated \n" );
 for (T col: row)
 {
-std::cout<< "rIt: " << rIt<< " cIt " << cIt << std::endl;
+//std::cout<< "rIt: " << rIt<< " cIt " << cIt << std::endl;
 _matrix[rIt][cIt]= col;
-std::cout<<"__"<< std::endl;
+//std::cout<<"__"<< std::endl;
 rIt= rIt +1 ;
 }
 cIt = cIt +1;
@@ -388,7 +391,7 @@ try
         for (int j = 0; j < rHsMatrix._cols; j++)
         {
         	rHsMatrix._matrix[i][j] = rHsMatrix._matrix[i][j] + this->_matrix[i][j];
-        	std::cout<< "copy elements from addition" << std::endl;
+        	//std::cout<< "copy elements from addition" << std::endl;
         }
 	}
 	
@@ -414,7 +417,7 @@ try
         for (int j = 0; j < rHsMatrix._cols; j++)
         {
         	rHsMatrix._matrix[i][j] = rHsMatrix._matrix[i][j] - this->_matrix[i][j];
-        	std::cout<< "copy elements from subtraction" << std::endl;
+        	//std::cout<< "copy elements from subtraction" << std::endl;
         }
 	}
 	
@@ -471,7 +474,7 @@ template <typename T > void Matrix<T>::eraseColumn(int col)
 					std::cout<< "t  " << t<< std::endl;
         			for (int j = 0; j < this->_cols; j++)
         			{
-						std::cout<< " blablablabalabn  " << std::endl;
+						//std::cout<< " blablablabalabn  " << std::endl;
         				tmp._matrix[t][j] = this->_matrix[i][j];
         			
         			}

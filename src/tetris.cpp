@@ -2,7 +2,7 @@
 #include <cmath>  
 
 Tetracube::Tetracube(): engine(dev()),
-      randomTetracube(1,5)
+      randomTetracube(1,7)
       
 {   
     identifier = randomTetracube(engine);
@@ -33,6 +33,18 @@ Tetracube::Tetracube(): engine(dev()),
         case T: //T shape
         _shape({{0,0,1,-1},
                 {0,1,1,1},
+                {1,1,1,1}});
+        break;
+
+        case LMIRROR: //L shape
+        _shape({{-1,-1,0,1},
+                {-1,0,0,0},
+                {1,1,1,1}});
+        break;
+
+        case SKEWMIRROR: //L shape
+        _shape({{0,1,0,1},
+                {-1,0,0,1},
                 {1,1,1,1}});
         break;
     }
@@ -434,17 +446,20 @@ else {
 
 }
 void Tetris::checkHeap()
-{
+{      
+        if (rowSize[4]>= 1) running = false;
        for(int i =0; i<rowSize.size(); i++ )
         {
                 if(rowSize[i] == grid_width)
                 {       std::cout<< "_THeap.size(): "<< _THeap.size() <<std::endl;
                         std::cout<< "delete row: "<<rowSize[i] <<std::endl;
+                        deletedRowsIndex.push_back(i);
+
                         for(int j = 0; j < _THeap.size(); j++)
                         {       
                                 _THeap[j]->_currentShape.printMatrix();
                                 _THeap[j]->eraseRow(i);
-                                deletedRowsIndex.push_back(i);
+                                 std::cout<< "_THeap[j]->getTetracubeSize() "<<_THeap[j]->getTetracubeSize() <<std::endl;
                                 _THeap[j]->_currentShape.printMatrix();
                                 //ensure that empty Tetracubes do not remain in Heap
                                 if(false)//(_THeap[j]->getTetracubeSize() == 0)
@@ -452,6 +467,7 @@ void Tetris::checkHeap()
                                         _THeap.erase(_THeap.begin() + j);
                                 }
                         }
+                        score += 1;
                         rowSize[i] = 0;
                 }
         }
@@ -469,12 +485,40 @@ void Tetris::updateHeap()
                 }
                 for(int j =0; j<rowSize.size(); j++ )
                 {
-                        if(rowSize[j] == deletedRowsIndex[i])
-                        {      
-                                rowSize.erase(rowSize.begin() + deletedRowsIndex[i] );
+                           
+                             std::cout<<"previous rows"  <<  rowSize[j] << std::endl;
+                    
+                }
+                std::vector<int> temp;
+                int nullIdx;
+                bool null = true;
+                for(int j =0; j<rowSize.size(); j++ )
+                {      
+                        if(j < deletedRowsIndex[i] && rowSize[j] != 0 )
+                        {     
+                                if (null)
+                                {
+                                        nullIdx= j;
+                                        null = false;
+                                }
+                                temp.push_back(rowSize[j]);
                         }
                 }
+                for(int j =0; j<temp.size(); j++ )
+                {        
+                               rowSize[nullIdx+1+j] = temp[j];
+                        
+                }
+                rowSize[nullIdx] = 0;
+                temp.clear();
+                for(int j =0; j<rowSize.size(); j++ )
+                {
+                           
+                             std::cout<<"updated rows"  <<  rowSize[j] << std::endl;
+                    
+                }
         }
+
         deletedRowsIndex.clear();
         
 }

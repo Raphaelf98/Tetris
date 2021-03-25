@@ -16,7 +16,7 @@ Renderer::Renderer(const std::size_t screen_width,
   }
 
   // Create Window
-  sdl_window = SDL_CreateWindow("Snake Game", SDL_WINDOWPOS_CENTERED,
+  sdl_window = SDL_CreateWindow("Tetris Game", SDL_WINDOWPOS_CENTERED,
                                 SDL_WINDOWPOS_CENTERED, screen_width,
                                 screen_height, SDL_WINDOW_SHOWN);
 
@@ -30,6 +30,15 @@ Renderer::Renderer(const std::size_t screen_width,
   if (nullptr == sdl_renderer) {
     std::cerr << "Renderer could not be created.\n";
     std::cerr << "SDL_Error: " << SDL_GetError() << "\n";
+  }
+  for (int i=0; i< grid_width; i++)
+  {
+    for (int j=0; j<4; j++)
+    {   SDL_Point redPoint;
+        redPoint.x = i;
+        redPoint.y = j;
+        RedArea.push_back(redPoint);
+    }
   }
 }
 
@@ -48,6 +57,16 @@ void Renderer::Render(Tetris &tetris) {
   block.h = screen_height / grid_height;
 block1.w = screen_width / grid_width;
   block1.h = screen_height / grid_height;
+
+SDL_SetRenderDrawColor(sdl_renderer, 255, 0, 0, 100);
+  for (SDL_Point const &point : RedArea) {
+    
+    block.x = point.x * block.w;
+    block.y = point.y * block.h;
+    //std::cout<< "point.x: " << point.x << "point.y: "<< point.y << std::endl;
+    SDL_RenderFillRect(sdl_renderer, &block);
+    
+  }
 if (tetris.getTHeap().size() != _heapSize)
 {
 _r += 50;

@@ -13,6 +13,7 @@ class Renderer {
     void Render(Tetris &tetris);
     void UpdateWindowTitle(int score, int fps);
     private:
+    std::vector<SDL_Point> RedArea;
     int _r = 0;
     int _g= 0;
     int _b=0;

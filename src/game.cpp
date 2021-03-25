@@ -19,14 +19,14 @@ void Game::Run(Controller const &controller, Renderer &renderer,
   Uint32 frame_end;
   Uint32 frame_duration;
   int frame_count = 0;
-  bool running = true;
+ 
 
-  while (running) {
+  while (_tetris.running) {
     frame_start = SDL_GetTicks();
 
     // Input, Update, Render - the main game loop.
     
-    controller.HandleInput(running, _tetris);
+    controller.HandleInput(_tetris.running, _tetris);
     renderer.Render(_tetris);
    _tetris.UpdateTetracube();
    _tetris.checkHeap();
@@ -40,7 +40,7 @@ void Game::Run(Controller const &controller, Renderer &renderer,
 
     // After every second, update the window title.
     if (frame_end - title_timestamp >= 1000) {
-      renderer.UpdateWindowTitle(score, frame_count);
+      renderer.UpdateWindowTitle(_tetris.score, frame_count);
       frame_count = 0;
       title_timestamp = frame_end;
     }

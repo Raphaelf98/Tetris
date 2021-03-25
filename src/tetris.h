@@ -6,10 +6,12 @@
 #include <random>
 #define STRAIGHT 1
 #define L 2
+
 #define SKEW 3
 #define SQUARE 4
 #define T 5
-
+#define LMIRROR 6
+#define SKEWMIRROR 7
 
 class Tetracube
 {
@@ -43,7 +45,7 @@ class Tetracube
     std::mt19937 engine;
     std::uniform_int_distribution<int> randomTetracube;
     //initial transformation with (5,1) offset
-    Matrix <int> _initialTransformation = Matrix({{1,0,9},{0,1,1},{0,0,1}});
+    Matrix <int> _initialTransformation = Matrix({{1,0,6},{0,1,1},{0,0,1}});
     Matrix<int> _currentTransformation = Matrix({{1,0,0},
                 {0,1,0},
                 {0,0,1}});
@@ -81,6 +83,8 @@ class Tetracube
 class Tetris 
 {
     public:
+    bool running = true;
+
     Tetris(int grid_width, int grid_height);
     std::vector<SDL_Point> getFallingShape();
     std::vector<Tetracube*> getTHeap();
@@ -93,7 +97,8 @@ class Tetris
     void updateHeap();
     void checkHeap();
     bool positionCheck();
-    
+    int score = 0;
+
     Tetracube* _TFalling;
     bool landed = false;
 
