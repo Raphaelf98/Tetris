@@ -3,7 +3,9 @@
  In order to approach this task I have created a Matrix data type class in order to provide basic functionality for the game. 
  
  Funcitonality of the game is ensured by using matrices to represent the individual Tetracubes needed to play this game. 
-<img src="Tetris.png" width="350" height="600"/>
+
+<img src="Tetris.png" />
+
  Rendering is done with the SDL library.
  ## Dependencies for Running Tetris Locally
  * cmake >= 3.7
