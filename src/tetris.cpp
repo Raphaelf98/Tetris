@@ -241,9 +241,17 @@ Tetris::Tetris(int grid_width, int grid_height)
 std::vector<SDL_Point> Tetris::getFallingShape(){
     return _TFalling->getTetracubeMatrix();
 }
-
-std::vector<Tetracube*> Tetris::getTHeap()
+Tetris::~Tetris()
 {
+        for (int i = 0; i < _THeap.size(); i++)
+        {
+                std::cout<<"delete heap element: "<< i << std::endl;
+                delete _THeap[i];
+        }
+        
+}
+std::vector<Tetracube*> Tetris::getTHeap()
+{       
         return _THeap;
 }
 

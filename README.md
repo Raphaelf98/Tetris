@@ -28,3 +28,29 @@
 2. Make a build directory in the top level directory: `mkdir build && cd build`
 3. Compile: `cmake .. && make`
 4. Run it: `./Tetris`.
+
+## Rubric points addressed
+### Loops, Functions, I/O
+| Rubric point  | Location |
+| ------------- | ------------- |
+| The project demonstrates an understanding of C++ functions and control structures.  |   Yes, check all the files
+|The project accepts user input and processes the input.  |   [controller](src/controller.cpp)
+
+### Object Oriented Programming
+| Rubric point  | Location |
+| ------------- | ------------- |
+| The project uses Object Oriented Programming techniques.  |   Yes, check all the files
+Classes use appropriate access specifiers for class members. | Yes, check all the files
+Class constructors utilize member initialization lists. | Yes, check all the files
+Classes abstract implementation details from their interfaces. | Yes, check all the files
+Classes encapsulate behavior. | Yes, check all the files | 
+Templates generalize functions in the project. | [matrix](src/matrix.h)
+
+### Memory Management
+| Rubric point  | Location |
+| ------------- | ------------- |
+| The project makes use of references in function declarations.  |  Yes, check all the files 
+The project uses destructors appropriately. | [matrix](src/matrix.h) / [tetris](src/tetris.cpp)
+The project uses scope / Resource Acquisition Is Initialization (RAII) where appropriate. | [matrix](src/matrix.h)
+The project follows the Rule of 5. | [matrix](src/matrix.h)
+

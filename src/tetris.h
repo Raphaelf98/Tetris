@@ -19,7 +19,7 @@ class Tetracube
     int count = 2;
 
     enum class Direction { kUp, kDown, kLeft, kRight, kNon };
-    //Tetracube  ();
+    
     Tetracube();
     void updatePOSE(const std::vector<bool> &LRCollision,int gridWidth, int gridHeigth);
     std::vector<int> YShapeCoordinates();
@@ -87,6 +87,7 @@ class Tetris
     bool running = true;
 
     Tetris(int grid_width, int grid_height);
+    ~Tetris();
     std::vector<SDL_Point> getFallingShape();
     std::vector<Tetracube*> getTHeap();
     int getYHeapCoordinates(int x);
