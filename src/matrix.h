@@ -2,6 +2,7 @@
 #define MATRIX_H
 #include<vector>
 #include<stdio.h>
+#include <stdlib.h>
 #include<iostream>
 #include <stdexcept>
 #include <initializer_list>
@@ -13,12 +14,13 @@ Matrix(size_t rows,size_t col);
 Matrix(const Matrix &source);
 Matrix<T> operator = (const Matrix &source);
 Matrix(std::initializer_list< std::initializer_list< T>> matrixList);
-
+Matrix(Matrix &&source);
+Matrix<T> &operator = ( Matrix &&source);
 ~Matrix();
 T  operator ()(size_t row, size_t column);
 void  operator()(size_t row, size_t col, T value);
 void operator()(std::initializer_list< std::initializer_list< T>> matrixList);
-Matrix<T> operator * ( const Matrix &rHsMatrix);
+Matrix<T> operator * (  Matrix &rHsMatrix);
 Matrix<T> operator + ( Matrix rHsMatrix);
 Matrix<T> operator - ( Matrix rHsMatrix);
 
@@ -33,43 +35,45 @@ private:
 size_t _rows, _cols;
 T** _matrix;
 bool memoryAllocated = true;
+bool moved = false;
 };
 //default constructor 
 template<typename T> Matrix<T>::Matrix()
 {
-	memoryAllocated = false;
+	std::cout<<"default constrtuctor called"<<std::endl;
+	_matrix = nullptr;
 }
 
 // constructor with rows and colums
 template<typename T> Matrix<T>::Matrix(const size_t rows,const size_t cols)
 {
 	//std::cout.setstate(std::ios_base::failbit);
-_rows= rows;
-_cols = cols;
-_matrix = new T*[_rows];
+	std::cout<<"row column construcor called"<<std::endl;
+	_rows= rows;	
+	_cols = cols;
+	_matrix = new T*[_rows];
 //std::cout << "Creating " << _cols << " X " << _rows<<" Matrix"<<  std::endl;
-for (size_t t= 0; t <_rows; t++)
-{
+	for (size_t t= 0; t <_rows; t++)
+	{
 	//std::cout<<"Heap memory allocated for row number:"<<t << " at memory address: " << &_matrix[t]<<std::endl;
          
-}   
-for (size_t t= 0; t <_rows; t++)
-{
-	_matrix[t] = new T[_cols];
-}	
+	}   
+	for (size_t t= 0; t <_rows; t++)
+	{
+		_matrix[t] = new T[_cols];
+	}	
 
 }
 template<typename T> Matrix<T>::Matrix(std::initializer_list< std::initializer_list< T>> matrixList )
 {
-
+std::cout<<"initializer list constructor called"<<std::endl;
 try{
+	
 _rows= matrixList.begin()->size();
 _cols	= matrixList.size();
 _matrix = new T*[_rows];
-//std::cout << "Creating " << _cols << " X " << _rows <<" Matrix"<<  std::endl;
 for (size_t t= 0; t <_rows; t++)
 {
-       //std::cout<<"Heap memory allocated for row number:"<<t << " at memory address: " << &_matrix[t]<<std::endl;
 
 }
 for (size_t t= 0; t <_rows; t++)
@@ -84,9 +88,7 @@ int rIt = 0;
 if( row.size()!= _rows) throw std::invalid_argument( "matrix not correctly populated \n" );
 for (T col: row)
 {
-//std::cout<< "rIt: " << rIt<< " cIt " << cIt << std::endl;
 _matrix[rIt][cIt]= col;
-//std::cout<<"__"<< std::endl;
 rIt= rIt +1 ;
 }
 cIt = cIt +1;
@@ -100,27 +102,31 @@ catch(const std::exception& e) {
 // destructor
 template<typename T> Matrix<T>::~Matrix()
 {	
+	std::cout<<"destructor called"<<std::endl;
+	if (_matrix != nullptr ) 
+	{
+		std::cout<<"Heap memory deallocated"<<std::endl;
+		if(_rows > 0)
+		{
+			for (size_t t; t < _rows; t++)
+			{
+		
+				delete [] _matrix[t];	
+			}
+		}
+		if (_cols > 0)
+		{std::cout<<"Heap memory deallocated"<<std::endl;
+		
+			delete [] _matrix;
+		}
 	
-	if (memoryAllocated){
-	if(_rows > 0)
-	{
-	for (size_t t; t < _rows; t++)
-	{
-		delete [] _matrix[t];	
 	}
-	}
-	if (_cols > 0)
-	{
-	delete [] _matrix;
-	}
-	//std::cout<<"Heap memory deallocated"<<std::endl;
-}
 
 }
 //copy constructor
 template <typename T>  Matrix<T>::Matrix(const Matrix &source)
 {
-	
+	std::cout<<"copy constructor called"<<std::endl;
 	_cols = source._cols;
 	_rows = source._rows;
 	_matrix = new T*[_rows];
@@ -133,7 +139,6 @@ template <typename T>  Matrix<T>::Matrix(const Matrix &source)
 	for (size_t j = 0; j < _cols; j++)
 		{
 			_matrix[i][j] = source._matrix[i][j];
-			//std::cout<< "copying elements ...." << std::endl;
 		}
 	}
 }
@@ -141,9 +146,10 @@ template <typename T>  Matrix<T>::Matrix(const Matrix &source)
 template<typename T> Matrix<T> Matrix<T>::operator = (const Matrix &source)
 {
 	
-//std::cout << "copy assingment operator invoked" << std::endl;
+std::cout<<"copy assignment operator called"<<std::endl;
+
 //free memory from previously allocated obejct his
-if(memoryAllocated){
+if(_matrix != nullptr){
 for(int i = 0; i< _rows; i++)
 {
 	delete [] _matrix[i];
@@ -158,21 +164,54 @@ for (int t =0; t< _rows; t++)
 {
 _matrix[t] = new T[_cols];
 }
-for (size_t t= 0; t <_rows; t++)
-{
-        //std::cout<<"Heap memory allocated for row number:"<<t << " at memory address: " << &_matrix[t]<<std::endl;
-}
+
 
 for (int i = 0; i< _rows; i++)
 {
 	for (int j = 0; j < _cols; j++)
 	{
 	_matrix[i][j] = source._matrix[i][j];
-	//std::cout<< "copy elements in copy assingment operator" << std::endl;
 	}
 }
 return *this;
 }
+//move constructor 
+template<typename T> Matrix<T>::Matrix( Matrix &&source)
+{
+	std::cout<<"move constructor called"<<std::endl;
+
+	_matrix = source._matrix;
+	_rows = source._rows;
+	_cols = source._cols;
+	
+ 	source._matrix = nullptr;
+    source._rows = 0;
+	source._cols = 0;
+         
+}
+//move assignment operator
+template<typename T> Matrix<T> &Matrix<T>::operator = ( Matrix &&source)
+{
+	std::cout<<"move assingment operator called"<<std::endl;
+		
+//free memory from previously allocated obejct his
+	if(_matrix != nullptr )
+	{
+	
+		delete[] _matrix;
+	}
+	if (this  == &source){ return *this;}
+	_rows = source._rows;
+	_cols = source._cols;
+
+	_matrix = source._matrix;  
+    source._rows = 0;
+	source._cols = 0;
+	source._matrix = nullptr;
+	return *this;
+}
+
+
 
 template <typename T> T  Matrix<T>::operator()(size_t row, size_t col)
 {
@@ -207,6 +246,7 @@ catch(...){std::cout<<"ERROR"<< std::endl; }
 template <typename T> void Matrix<T>::printMatrix()
 {
 std::cout<< std::endl;
+if(_matrix!= nullptr )
 for (int i= 0; i<_cols; i++)
 {   
         for (int j=0; j<_rows; j++)
@@ -218,7 +258,8 @@ for (int i= 0; i<_cols; i++)
 }
 std::cout<< std::endl;
 }
-/*template <typename T> Matrix<T> Matrix<T>::operator * ( Matrix &rHsMatrix)
+/*
+template <typename T> Matrix<T> Matrix<T>::operator * ( Matrix &rHsMatrix)
 {
 try
 {
@@ -276,9 +317,9 @@ for(int i = 0; i<rHsMatrix._rows; i++)
         delete [] productMatrix[i];
 }
 delete[] productMatrix;
+std::cout<< "product matrix deallocated" << std::endl;
 
 return rHsMatrix;
-
 }
 catch(const std::exception& e)
  {
@@ -287,8 +328,7 @@ catch(const std::exception& e)
  }
 }
 */
-
-template <typename T> Matrix<T> Matrix<T>::operator * (const Matrix &rHsMatrix)
+template <typename T> Matrix<T> Matrix<T>::operator * ( Matrix &rHsMatrix)
 {
 try
 {
@@ -305,12 +345,10 @@ for (int i= 0; i<rHsMatrix._rows; i++)
 	T temp = 0;
         for (int j=0; j<this->_rows; j++)
         {     
-              //std::cout << "accessing: " << "outer row: " << i << "  col: " << k<< "inner row "<< j << std::endl;
 	      
               temp += this->_matrix[j][k] *  rHsMatrix._matrix[i][j];
         }
-	//std::cout << "accessing: " << "row: " << i << "  col: " << k << std::endl;
-	tmp._matrix[i][k] = temp;
+		tmp._matrix[i][k] = temp;
         }
 }
 
@@ -324,27 +362,21 @@ catch(const std::exception& e)
  }
 }
 
-
 template <typename T> void Matrix<T>::operator()(std::initializer_list< std::initializer_list< T>> matrixList)
 {
 try{
 //If Matrix was initialized memory should be feed otherwise (default constructor) not
-if(memoryAllocated){
-for(int i = 0; i< _rows; i++)
-{
+if(_matrix != nullptr){
+	for(int i = 0; i< _rows; i++)
+	{	
 	delete [] _matrix[i];
-}
+	}
 delete[] _matrix;
 }
 _rows= matrixList.begin()->size();
 _cols	= matrixList.size();
 _matrix = new T*[_rows];
-//std::cout << "Creating " << _cols << " X " << _rows <<" Matrix"<<  std::endl;
-for (size_t t= 0; t <_rows; t++)
-{
-       //std::cout<<"Heap memory allocated for row number:"<<t << " at memory address: " << &_matrix[t]<<std::endl;
 
-}
 for (size_t t= 0; t <_rows; t++)
 {        _matrix[t] = new T[_cols];
 }
@@ -357,9 +389,7 @@ int rIt = 0;
 if( row.size()!= _rows) throw std::invalid_argument( "matrix not correctly populated \n" );
 for (T col: row)
 {
-//std::cout<< "rIt: " << rIt<< " cIt " << cIt << std::endl;
 _matrix[rIt][cIt]= col;
-//std::cout<<"__"<< std::endl;
 rIt= rIt +1 ;
 }
 cIt = cIt +1;
@@ -391,7 +421,6 @@ try
         for (int j = 0; j < rHsMatrix._cols; j++)
         {
         	rHsMatrix._matrix[i][j] = rHsMatrix._matrix[i][j] + this->_matrix[i][j];
-        	//std::cout<< "copy elements from addition" << std::endl;
         }
 	}
 	
@@ -417,7 +446,6 @@ try
         for (int j = 0; j < rHsMatrix._cols; j++)
         {
         	rHsMatrix._matrix[i][j] = rHsMatrix._matrix[i][j] - this->_matrix[i][j];
-        	//std::cout<< "copy elements from subtraction" << std::endl;
         }
 	}
 	
@@ -449,7 +477,7 @@ for (int i = 0; i< this->_rows; i++)
 }
 template <typename T > void Matrix<T>::eraseColumn(int col)
 {
-	if (_rows -1 == 0 )
+	if ((_rows -1 == 0) & (_matrix != nullptr))
 	{	
 		std::cout<< "   this->_rows-1 == 0   " << std::endl;
 		for(int i = 0; i< _rows; i++)
@@ -474,7 +502,6 @@ template <typename T > void Matrix<T>::eraseColumn(int col)
 					std::cout<< "t  " << t<< std::endl;
         			for (int j = 0; j < this->_cols; j++)
         			{
-						//std::cout<< " blablablabalabn  " << std::endl;
         				tmp._matrix[t][j] = this->_matrix[i][j];
         			
         			}

@@ -51,9 +51,11 @@ Tetracube::Tetracube(): engine(dev()),
     //map to initial pose 
     
      //
-    _testShape = _shape;
+    _testShape=_shape;
+
     _temporaryShape = Matrix<int> (4,3);
     _shape.printMatrix();
+     _testShape.printMatrix();
 }
 
 
@@ -154,7 +156,7 @@ std::vector<SDL_Point> Tetracube::getTetracubeMatrix()
 std::vector<SDL_Point> Tetracube::getRightRotated()
  {      std::vector<SDL_Point> rightRotated; 
          _testShape = _rightRotation *_testShape;
-         _testShape = _currentTransformation * _testShape;
+         _currentTestShape  = _currentTransformation * _testShape;
          _currentTestShape = _initialTransformation * _testShape ;
 
          for (int i = 0; i < _currentTestShape.getRowSize(); i++)
@@ -172,9 +174,15 @@ std::vector<SDL_Point> Tetracube::getRightRotated()
  std::vector<SDL_Point> Tetracube::getLeftRotated()
  {    std::vector<SDL_Point> leftRotated; 
         _testShape = _leftRotation *_testShape;
-        _testShape = _currentTransformation * _testShape;
+         std::cout << "E!"<< _currentTestShape.getRowSize() << std::endl;
+        _leftRotation.printMatrix();
+        _currentTransformation.printMatrix();
+        _testShape.printMatrix();
+        _currentTestShape  = _currentTransformation * _testShape;
+
         _currentTestShape = _initialTransformation * _testShape ;
-         
+                 std::cout << "E!"<< _currentTestShape.getRowSize() << std::endl;
+
          for (int i = 0; i < _currentTestShape.getRowSize(); i++)
         {   //convert homogeneous 3x4 matrix to 2x4 vector of points
        
@@ -266,7 +274,8 @@ std::vector<Tetracube*> Tetris::getTHeap()
          std::vector<bool> LRCollision{ false, false,false, false };
 
        for (SDL_Point &shapePoint : _TFalling->getTetracubeMatrix())
-        {       //heap collision check
+        {       
+//heap collision check
                 for (Tetracube *tetra: _THeap)
                 {       //first element true if left side col -- second elem true if right side col
                
@@ -317,8 +326,10 @@ std::vector<Tetracube*> Tetris::getTHeap()
 
         
        }
+
        for (SDL_Point &shapePoint : _TFalling->getLeftRotated())
         {       //heap collision check
+
                 for (Tetracube *tetra: _THeap)
                 {       //first element true if left side col -- second elem true if right side col
                
@@ -349,6 +360,7 @@ std::vector<Tetracube*> Tetris::getTHeap()
 
         
        }
+
        for (SDL_Point &shapePoint : _TFalling->getRightRotated())
         {       //heap collision check
                  for (Tetracube *tetra : _THeap)

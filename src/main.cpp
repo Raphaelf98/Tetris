@@ -19,7 +19,16 @@ Game game(kGridWidth, kGridHeight);
 game.Run(controller, renderer, kMsPerFrame);
   std::cout << "Game has terminated successfully!\n";
   
-  
+/*Matrix <int> _shape({ {0,0,0,0},
+                {-1,0,1,2},
+                {1,1,1,1} });
+ Matrix <int> _leftRotation = Matrix({{0,1,0},
+                                {-1,0,0},
+                                {0,0,1}});
+_shape.printMatrix();
+_shape = _leftRotation * _shape;               
+_shape.printMatrix();
+*/
   return 0;
 
 };

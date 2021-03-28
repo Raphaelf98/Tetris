@@ -27,10 +27,20 @@ void Game::Run(Controller const &controller, Renderer &renderer,
     // Input, Update, Render - the main game loop.
     
     controller.HandleInput(_tetris.running, _tetris);
+      std::cout << "A!\n";
+
     renderer.Render(_tetris);
+      std::cout << "B!\n";
+
    _tetris.UpdateTetracube();
+     std::cout << "C!\n";
+
    _tetris.checkHeap();
+     std::cout << "D!\n";
+
    _tetris.updateHeap();
+     std::cout << "E!\n";
+
     frame_end = SDL_GetTicks();
 
     // Keep track of how long each loop through the input/update/render cycle
