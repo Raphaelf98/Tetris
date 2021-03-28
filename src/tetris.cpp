@@ -1,6 +1,6 @@
 #include "tetris.h"
 #include <cmath>  
-
+#include <algorithm>
 Tetracube::Tetracube(): engine(dev()),
       randomTetracube(1,7)
       
@@ -47,6 +47,7 @@ Tetracube::Tetracube(): engine(dev()),
                 {-1,0,0,1},
                 {1,1,1,1}});
         break;
+        
     }
     //map to initial pose 
     
