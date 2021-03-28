@@ -158,7 +158,7 @@ std::vector<SDL_Point> Tetracube::getRightRotated()
  {      std::vector<SDL_Point> rightRotated; 
          _testShape = _rightRotation *_testShape;
          _currentTestShape  = _currentTransformation * _testShape;
-         _currentTestShape = _initialTransformation * _testShape ;
+         _currentTestShape = _initialTransformation * _currentTestShape ;
 
          for (int i = 0; i < _currentTestShape.getRowSize(); i++)
         {   //convert homogeneous 3x4 matrix to 2x4 vector of points
@@ -181,7 +181,7 @@ std::vector<SDL_Point> Tetracube::getRightRotated()
         _testShape.printMatrix();
         _currentTestShape  = _currentTransformation * _testShape;
 
-        _currentTestShape = _initialTransformation * _testShape ;
+        _currentTestShape = _initialTransformation * _currentTestShape ;
                  std::cout << "E!"<< _currentTestShape.getRowSize() << std::endl;
 
          for (int i = 0; i < _currentTestShape.getRowSize(); i++)
